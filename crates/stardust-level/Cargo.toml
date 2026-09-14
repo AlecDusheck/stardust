@@ -1,0 +1,12 @@
+[package]
+name = "stardust-level"
+version = "0.1.0"
+edition = "2024"
+description = "Stardust level format, legend and importer for the original game's levels"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+ron = "0.10"
+
+[lints]
+workspace = true

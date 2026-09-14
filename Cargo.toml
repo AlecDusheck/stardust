@@ -1,0 +1,88 @@
+[package]
+name = "stardust"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+bevy = { version = "0.19", default-features = false, features = [
+    "std",
+    "async_executor",
+    "bevy_asset",
+    "bevy_audio",
+    "bevy_gizmos_render",
+    "bevy_log",
+    "bevy_sprite_render",
+    "bevy_state",
+    "bevy_text",
+    "bevy_winit",
+    "default_font",
+    "multi_threaded",
+    "png",
+    "wav",
+    "webgl2",
+    "x11",
+    "wayland",
+] }
+stardust-core = { path = "crates/stardust-core" }
+stardust-level = { path = "crates/stardust-level" }
+
+[features]
+dev = ["bevy/dynamic_linking"]
+
+[lints]
+workspace = true
+
+[profile.dev]
+opt-level = 1
+
+[profile.dev.package."*"]
+opt-level = 3
+
+[profile.wasm-release]
+inherits = "release"
+opt-level = "z"
+lto = "fat"
+codegen-units = 1
+
+[workspace]
+members = ["crates/*"]
+resolver = "3"
+
+# Tuning knobs (thresholds, disallowed methods, MSRV) live in clippy.toml.
+[workspace.lints.clippy]
+complexity = { level = "deny", priority = -1 }
+correctness = { level = "deny", priority = -1 }
+nursery = { level = "deny", priority = -1 }
+pedantic = { level = "deny", priority = -1 }
+perf = { level = "deny", priority = -1 }
+style = { level = "deny", priority = -1 }
+suspicious = { level = "deny", priority = -1 }
+
+cast_possible_truncation = "allow"
+cast_possible_wrap = "allow"
+cast_precision_loss = "allow"
+cast_sign_loss = "allow"
+collapsible_if = "allow"
+doc_lazy_continuation = "allow"
+doc_markdown = "allow"
+many_single_char_names = "allow"
+match_same_arms = "allow"
+single_match_else = "allow"
+uninlined_format_args = "deny"
+missing_const_for_fn = "allow"
+missing_docs_in_private_items = "allow"
+missing_errors_doc = "allow"
+future_not_send = "allow"
+must_use_candidate = "allow"
+needless_pass_by_value = "allow"
+option_if_let_else = "allow"
+significant_drop_tightening = "allow"
+struct_excessive_bools = "allow"
+# Rotation matrices and grid arithmetic read far better written out than as mul_add.
+suboptimal_flops = "allow"
+multiple_crate_versions = "allow"
+similar_names = "allow"
+
+[workspace.lints.rust]
+dead_code = "warn"
+unsafe_code = "warn"

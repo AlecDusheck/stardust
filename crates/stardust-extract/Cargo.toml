@@ -1,0 +1,15 @@
+[package]
+name = "stardust-extract"
+version = "0.1.0"
+edition = "2024"
+description = "Extracts art, sounds and levels from the original Stardust archive"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+macrsrc = { path = "../macrsrc" }
+png = "0.18"
+stardust-level = { path = "../stardust-level" }
+stuffit = { path = "../stuffit" }
+
+[lints]
+workspace = true

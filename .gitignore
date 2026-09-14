@@ -1,0 +1,9 @@
+/target
+/archive/
+/assets/
+/vendor/*
+!/vendor/README.md
+screenshot-*.png
+.DS_Store
+__pycache__/
+.wrangler/

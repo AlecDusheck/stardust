@@ -1,0 +1,28 @@
+name: Build
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install Linux dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++ pkg-config libx11-dev libasound2-dev libudev-dev libxkbcommon-x11-0 libwayland-dev libxkbcommon-dev
+      - run: rustup update stable --no-self-update
+      - uses: Swatinem/rust-cache@v2
+      - run: python3 scripts/extract.py
+      - run: cargo test --workspace --locked --release
+      - run: cargo build --locked --release
+      - name: Package game and assets
+        run: tar -czf target/stardust-linux-x86_64.tar.gz -C target/release stardust -C "$GITHUB_WORKSPACE" assets
+      - uses: actions/upload-artifact@v6
+        with:
+          name: stardust-linux-x86_64
+          path: target/stardust-linux-x86_64.tar.gz
+          if-no-files-found: error

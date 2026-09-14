@@ -1,0 +1,10 @@
+[package]
+name = "macrsrc"
+version = "0.1.0"
+edition = "2024"
+description = "Classic Mac OS resource fork, PICT and 'snd ' decoding"
+
+[dependencies]
+
+[lints]
+workspace = true

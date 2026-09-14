@@ -1,0 +1,11 @@
+[package]
+name = "stardust-core"
+version = "0.1.0"
+edition = "2024"
+description = "Stardust rules: a deterministic, engine-independent simulation"
+
+[dependencies]
+stardust-level = { path = "../stardust-level" }
+
+[lints]
+workspace = true

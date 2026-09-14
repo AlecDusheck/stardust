@@ -1,0 +1,10 @@
+[package]
+name = "stuffit"
+version = "0.1.0"
+edition = "2024"
+description = "StuffIt 5 archive parser with Arsenic (method 15) decompression"
+
+[dependencies]
+
+[lints]
+workspace = true

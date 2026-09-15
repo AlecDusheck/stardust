@@ -49,7 +49,7 @@ cargo run
 | Esc | Back to the title |
 
 Title screen: `Space` new game, `P` enter a password, `I` instructions, `S` the
-story, `E` level editor.
+story, `E` level editor, `G` GitHub project (also clickable).
 
 ## Level format
 

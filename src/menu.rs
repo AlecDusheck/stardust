@@ -9,6 +9,7 @@ use crate::grid::Z_OVERLAY;
 use crate::play::{Pending, Source};
 use bevy::ecs::system::SystemParam;
 use bevy::prelude::*;
+use bevy::text::TextLayoutInfo;
 
 pub fn plugin(app: &mut App) {
     app.init_resource::<Progress>()
@@ -30,6 +31,7 @@ pub fn plugin(app: &mut App) {
         .add_systems(OnEnter(AppState::LevelIntro), level_intro)
         .add_systems(OnEnter(AppState::Victory), victory_screen)
         .add_systems(Update, title_keys.run_if(in_state(AppState::Title)))
+        .add_systems(Update, github_link.run_if(in_state(AppState::Title)))
         .add_systems(
             Update,
             back_to_title.run_if(
@@ -91,6 +93,11 @@ struct PasswordEntry(String);
 #[derive(Component)]
 struct PasswordText;
 
+#[derive(Component)]
+struct GitHubLink;
+
+const PROJECT_URL: &str = "https://github.com/AlecDusheck/stardust";
+
 const CYAN: Color = Color::srgb(0.4, 1.0, 1.0);
 const GREEN: Color = Color::srgb(0.3, 1.0, 0.3);
 
@@ -128,7 +135,62 @@ fn title_screen(
         Vec2::new(0.0, -60.0),
         AppState::Title,
     ));
+    commands.spawn((
+        text(
+            "g  GitHub project",
+            22.0,
+            CYAN,
+            Vec2::new(0.0, -140.0),
+            AppState::Title,
+        ),
+        GitHubLink,
+    ));
     sounds.write(PlaySound("program_s_begun"));
+}
+
+fn github_link(
+    keys: Res<ButtonInput<KeyCode>>,
+    mouse: Res<ButtonInput<MouseButton>>,
+    touches: Res<Touches>,
+    window: Single<&Window>,
+    camera: Single<(&Camera, &GlobalTransform)>,
+    link: Single<(&GlobalTransform, &TextLayoutInfo), With<GitHubLink>>,
+) {
+    let (transform, layout) = *link;
+    let bounds = Rect::from_center_size(transform.translation().truncate(), layout.size);
+    let hit = |position| {
+        camera
+            .0
+            .viewport_to_world_2d(camera.1, position)
+            .is_ok_and(|point| bounds.contains(point))
+    };
+    if keys.just_pressed(KeyCode::KeyG)
+        || (mouse.just_released(MouseButton::Left) && window.cursor_position().is_some_and(hit))
+        || touches
+            .iter_just_released()
+            .any(|touch| hit(touch.position()))
+    {
+        open_project();
+    }
+}
+
+fn open_project() {
+    #[cfg(not(target_arch = "wasm32"))]
+    if let Err(error) = open::that_detached(PROJECT_URL) {
+        warn!("Could not open GitHub project: {error}");
+    }
+    #[cfg(target_arch = "wasm32")]
+    if let Some(window) = web_sys::window() {
+        // Fall back to this tab if the browser blocks a new one.
+        if !matches!(
+            window.open_with_url_and_target(PROJECT_URL, "_blank"),
+            Ok(Some(_))
+        ) {
+            if let Err(error) = window.location().set_href(PROJECT_URL) {
+                warn!("Could not open GitHub project: {error:?}");
+            }
+        }
+    }
 }
 
 pub fn title_keys(keys: Res<ButtonInput<KeyCode>>, mut start: StartLevel) {

@@ -131,7 +131,7 @@ fn title_screen(
     sounds.write(PlaySound("program_s_begun"));
 }
 
-fn title_keys(keys: Res<ButtonInput<KeyCode>>, mut start: StartLevel) {
+pub fn title_keys(keys: Res<ButtonInput<KeyCode>>, mut start: StartLevel) {
     if keys.any_just_pressed([KeyCode::Space, KeyCode::Enter]) {
         start.start(0);
     } else if keys.just_pressed(KeyCode::KeyP) {

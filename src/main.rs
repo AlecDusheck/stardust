@@ -8,6 +8,7 @@ mod editor;
 mod grid;
 mod menu;
 mod play;
+mod sonnet;
 mod tileset;
 mod transition;
 
@@ -27,6 +28,7 @@ pub enum AppState {
     Playing,
     Victory,
     Editor,
+    Sonnet,
 }
 
 fn main() {
@@ -51,6 +53,7 @@ fn main() {
             assets::plugin,
             audio::plugin,
             menu::plugin,
+            sonnet::plugin,
             play::plugin,
             editor::plugin,
         ))

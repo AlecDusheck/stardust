@@ -149,6 +149,7 @@ pub const SOUNDS: &[&str] = &[
     "password_no_good",
     "information",
     "warp",
+    "j_i_m",
 ];
 
 fn start_loading(
